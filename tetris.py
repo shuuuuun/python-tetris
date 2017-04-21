@@ -46,12 +46,12 @@ class Tetris:
         # self.drawBlock(win, boardX, boardY, blockId)
         # self.drawBlock(win, boardX, boardY, 1)
         self.drawBlock(win, self.currentBlock)
-        # if not (this.currentBlock.shape and this.currentBlock.shape.length):
+        # if not (this.currentBlock['shape'] and this.currentBlock['shape'].length):
         #   return
         # for y in range(NUMBER_OF_BLOCK):
         #   for x in range(NUMBER_OF_BLOCK):
-        #     blockId = self.currentBlock.id
-        #     if (!self.currentBlock.shape[y][x] || isNaN(blockId) || blockId < 0):
+        #     blockId = self.currentBlock['id']
+        #     if (!self.currentBlock['shape'][y][x] || isNaN(blockId) || blockId < 0):
         #         continue
         #     drawX = x + self.currentBlock['x']
         #     drawY = y + self.currentBlock['y'] - HIDDEN_ROWS
@@ -197,9 +197,9 @@ class Tetris:
           for x in range(NUMBER_OF_BLOCK):
             boardX = x + self.currentBlock['x']
             boardY = y + self.currentBlock['y']
-            if not self.currentBlock.shape[y][x] or boardY < 0:
+            if not self.currentBlock['shape'][y][x] or boardY < 0:
                 continue
-            self.board[boardY][boardX] = self.currentBlock.id + 1 if self.currentBlock.shape[y][x] else 0
+            self.board[boardY][boardX] = self.currentBlock['id'] + 1 if self.currentBlock['shape'][y][x] else 0
 
     def clearLines(self):
         clearLineLength = 0 # 同時消去ライン数
@@ -243,14 +243,14 @@ class Tetris:
 
     def rotateBlock(self):
         rotatedBlock = Object.assign({}, self.currentBlock)
-        rotatedBlock.shape = self.rotate(self.currentBlock.shape)
+        rotatedBlock.shape = self.rotate(self.currentBlock['shape'])
         isValid = self.validate(0, 0, rotatedBlock)
         if isValid:
           self.currentBlock = rotatedBlock
         return isValid
 
     def rotate(self, shape):
-        shape = shape or self.currentBlock.shape
+        shape = shape or self.currentBlock['shape']
         newBlockShape = []
         for y in range(NUMBER_OF_BLOCK):
           newBlockShape[y] = []
@@ -283,7 +283,7 @@ class Tetris:
             isOutsideLeftWall = boardX < 0
             isOutsideRightWall = boardX >= COLS
             isUnderBottom = boardY >= LOGICAL_ROWS
-            isOutsideBoard = self.board[boardY] is None or self.board[boardY][boardX] is None 
+            isOutsideBoard = boardY >= len(self.board) or boardX >= len(self.board[boardY])
             isExistsBlock = (not isOutsideBoard) and self.board[boardY][boardX]
             if isOutsideLeftWall or isOutsideRightWall or isUnderBottom or isOutsideBoard or isExistsBlock:
               return False
