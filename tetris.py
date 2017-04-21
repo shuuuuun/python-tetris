@@ -1,8 +1,5 @@
-import sys
-import time
 import copy
 import random
-import threading
 from threading import Timer
 import curses
 from curses import wrapper
@@ -58,45 +55,15 @@ class Tetris:
         self.drawBoard(stdscr)
         self.drawCurrentBlock(stdscr)
         # stdscr.addstr(0, 0, 'hogehoge')
-        # self.isPlayng = False
-        # stdscr.addstr(0, 0, str(self.isPlayng))
         stdscr.refresh()
 
     def main(self, stdscr):
-        stdscr.clear()
-
-        # self.drawBorder(stdscr)
-        # self.drawBox(stdscr, 0, 0)
-        
-        # self.drawBlock(stdscr, 3, 0, 0)
-        # self.tick(stdscr)
         self.newGame(stdscr)
 
-        # stdscr.move(10, 10)
-        stdscr.refresh()
-        # stdscr.getkey()
-        # stdscr.getkey('w')
-        # stdscr.timeout()
-        # curses.echo()
-        # stdscr.addstr(0, 0, str(self))
-        # stdscr.refresh()
-        # self.quitGame()
         while True:
-            # raise KeyboardInterrupt
-            # self.isPlayng = False
-            # self.quitGame()
-            # stdscr.addstr(0, 0, str(self.isPlayng))
-            # stdscr.refresh()
             c = stdscr.getch()
             if c == ord('q'):
-                # self.isPlayng = False
                 self.quitGame()
-                # stdscr.addstr(0, 0, 'hogehoge')
-                # stdscr.refresh()
-                # print(c)
-                # curses.echo()
-                # curses.nocbreak(); stdscr.keypad(0); curses.echo()
-                # curses.endwin()
                 # raise KeyboardInterrupt
                 break
             elif c == curses.KEY_LEFT:
@@ -113,7 +80,6 @@ class Tetris:
         self.startGame(stdscr)
 
     def initGame(self):
-        # clearTimeout(self.tickId)
         # self.stopRender()
         self.isPlayng = False
         self.lose = False
@@ -134,7 +100,6 @@ class Tetris:
         self.tick(stdscr)
 
     def tick(self, stdscr):
-        # clearTimeout(self.tickId)
         if not self.moveBlockDown():
           self.freeze()
           self.clearLines()
@@ -144,15 +109,9 @@ class Tetris:
           self.frameCount += 1
           self.createCurrentBlock()
           self.createNextBlock()
-        # self.tickId = setTimeout(() => self.tick(), self.tickInterval);
 
-        # self.quitGame()
-        # print(str(self.isPlayng))
         if self.isPlayng:
-            # self.isPlayng = False
             self.render(stdscr)
-            # time.sleep(self.tickInterval / 1000)
-            # self.tick(stdscr)
             self.timer = Timer(self.tickInterval / 1000, self.tick, [stdscr])
             self.timer.start()
 
