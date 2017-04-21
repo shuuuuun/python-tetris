@@ -1,5 +1,6 @@
 import time
 import copy
+import random
 import curses
 from curses import wrapper
 from constants import *
@@ -188,9 +189,8 @@ class Tetris:
         self.currentBlock['y'] = START_Y
 
     def createNextBlock(self):
-        # id = Math.floor(Math.random() * BLOCK_LIST.length)
-        # self.nextBlock = self.createBlock(id)
-        self.nextBlock = self.createBlock(0)
+        id = random.randint(0, len(BLOCK_LIST) - 1)
+        self.nextBlock = self.createBlock(id)
 
     def freeze(self):
         for y in range(NUMBER_OF_BLOCK):
