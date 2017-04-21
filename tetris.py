@@ -49,6 +49,7 @@ class Tetris:
     def drawCurrentBlock(self, win):
         boardX = self.currentBlock['x']
         boardY = self.currentBlock['y']
+        # print(boardX, boardY)
         # blockId = self.currentBlock['id']
         # print(blockId)
         # self.drawBlock(win, boardX, boardY, blockId)
@@ -65,7 +66,10 @@ class Tetris:
         #     self.drawBlock(drawX, drawY, blockId)
 
     def render(self, stdscr):
+        stdscr.clear()
+        self.drawBoard(stdscr)
         self.drawCurrentBlock(stdscr)
+        stdscr.refresh()
 
     def main(self, stdscr):
         stdscr.clear()
@@ -138,7 +142,7 @@ class Tetris:
 
         if self.isPlayng:
             self.render(stdscr)
-            time.sleep(DEFAULT_TICK_INTERVAL)
+            time.sleep(self.tickInterval / 1000)
             self.tick(stdscr)
 
     def quitGame(self):
