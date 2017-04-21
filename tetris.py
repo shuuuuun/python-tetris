@@ -100,14 +100,14 @@ class Tetris:
 
     def tick(self, stdscr):
         if not self.moveBlockDown():
-          self.freeze()
-          self.clearLines()
-          if self.checkGameOver():
-            self.quitGame()
-            return False
-          self.frameCount += 1
-          self.createCurrentBlock()
-          self.createNextBlock()
+            self.freeze()
+            self.clearLines()
+            if self.checkGameOver():
+                self.quitGame()
+                return False
+            self.frameCount += 1
+            self.createCurrentBlock()
+            self.createNextBlock()
 
         if self.isPlayng:
             self.render(stdscr)
@@ -131,10 +131,10 @@ class Tetris:
     def initBoard(self):
         self.board = []
         for y in range(LOGICAL_ROWS):
-          self.board.insert(y, [])
-          for x in range(COLS):
-            # self.board[y][x] = 0
-            self.board[y].insert(x, 0)
+            self.board.insert(y, [])
+            for x in range(COLS):
+                # self.board[y][x] = 0
+                self.board[y].insert(x, 0)
 
     def initBlock(self):
         self.nextBlock = self.createBlock(0)
@@ -171,12 +171,12 @@ class Tetris:
 
     def freeze(self):
         for y in range(NUMBER_OF_BLOCK):
-          for x in range(NUMBER_OF_BLOCK):
-            boardX = x + self.currentBlock['x']
-            boardY = y + self.currentBlock['y']
-            if not self.currentBlock['shape'][y][x] or boardY < 0:
-                continue
-            self.board[boardY][boardX] = self.currentBlock['id'] + 1 if self.currentBlock['shape'][y][x] else 0
+            for x in range(NUMBER_OF_BLOCK):
+                boardX = x + self.currentBlock['x']
+                boardY = y + self.currentBlock['y']
+                if not self.currentBlock['shape'][y][x] or boardY < 0:
+                    continue
+                self.board[boardY][boardX] = self.currentBlock['id'] + 1 if self.currentBlock['shape'][y][x] else 0
 
     def clearLines(self):
         clearLineLength = 0 # 同時消去ライン数
@@ -203,19 +203,19 @@ class Tetris:
     def moveBlockLeft(self):
         isValid = self.validate(-1, 0)
         if isValid:
-          self.currentBlock['x'] -= 1
+            self.currentBlock['x'] -= 1
         return isValid
 
     def moveBlockRight(self):
         isValid = self.validate(1, 0)
         if isValid:
-          self.currentBlock['x'] += 1
+            self.currentBlock['x'] += 1
         return isValid
 
     def moveBlockDown(self):
         isValid = self.validate(0, 1)
         if isValid:
-          self.currentBlock['y'] += 1
+            self.currentBlock['y'] += 1
         return isValid
 
     def rotateBlock(self):
@@ -223,26 +223,26 @@ class Tetris:
         rotatedBlock.shape = self.rotate(self.currentBlock['shape'])
         isValid = self.validate(0, 0, rotatedBlock)
         if isValid:
-          self.currentBlock = rotatedBlock
+            self.currentBlock = rotatedBlock
         return isValid
 
     def rotate(self, shape):
         shape = shape or self.currentBlock['shape']
         newBlockShape = []
         for y in range(NUMBER_OF_BLOCK):
-          newBlockShape[y] = []
-          for x in range(NUMBER_OF_BLOCK):
-            newBlockShape[y][x] = shape[NUMBER_OF_BLOCK - 1 - x][y]
+            newBlockShape[y] = []
+            for x in range(NUMBER_OF_BLOCK):
+                newBlockShape[y][x] = shape[NUMBER_OF_BLOCK - 1 - x][y]
         return newBlockShape;
 
     def rotateBoard(self, sign):
         newBoard = []
         for y in range(ROWS):
-          newBoard[y] = []
-          for x in range(COLS):
-            newBoard[y][x] = self.board[COLS - 1 - x + HIDDEN_ROWS][y]
+            newBoard[y] = []
+            for x in range(COLS):
+                newBoard[y][x] = self.board[COLS - 1 - x + HIDDEN_ROWS][y]
         for i in range(HIDDEN_ROWS):
-          newBoard.unshift(BLANK_ROW)
+            newBoard.unshift(BLANK_ROW)
         self.board = newBoard
         return newBoard
 
@@ -252,28 +252,28 @@ class Tetris:
         nextY = block['y'] + offsetY
 
         for y in range(NUMBER_OF_BLOCK):
-          for x in range(NUMBER_OF_BLOCK):
-            if not (block['shape'] and block['shape'][y][x]):
-              continue
-            boardX = x + nextX
-            boardY = y + nextY
-            isOutsideLeftWall = boardX < 0
-            isOutsideRightWall = boardX >= COLS
-            isUnderBottom = boardY >= LOGICAL_ROWS
-            isOutsideBoard = boardY >= len(self.board) or boardX >= len(self.board[boardY])
-            isExistsBlock = (not isOutsideBoard) and self.board[boardY][boardX]
-            if isOutsideLeftWall or isOutsideRightWall or isUnderBottom or isOutsideBoard or isExistsBlock:
-              return False
+            for x in range(NUMBER_OF_BLOCK):
+                if not (block['shape'] and block['shape'][y][x]):
+                    continue
+                boardX = x + nextX
+                boardY = y + nextY
+                isOutsideLeftWall = boardX < 0
+                isOutsideRightWall = boardX >= COLS
+                isUnderBottom = boardY >= LOGICAL_ROWS
+                isOutsideBoard = boardY >= len(self.board) or boardX >= len(self.board[boardY])
+                isExistsBlock = (not isOutsideBoard) and self.board[boardY][boardX]
+                if isOutsideLeftWall or isOutsideRightWall or isUnderBottom or isOutsideBoard or isExistsBlock:
+                    return False
         return True
 
     def checkGameOver(self):
         # ブロックの全てが画面外ならゲームオーバー
         isGameOver = True
         for y in range(NUMBER_OF_BLOCK):
-          for x in range(NUMBER_OF_BLOCK):
-            boardX = x + self.currentBlock['x']
-            boardY = y + self.currentBlock['y']
-            if boardY >= HIDDEN_ROWS:
-              isGameOver = False
-              break
+            for x in range(NUMBER_OF_BLOCK):
+                boardX = x + self.currentBlock['x']
+                boardY = y + self.currentBlock['y']
+                if boardY >= HIDDEN_ROWS:
+                    isGameOver = False
+                    break
         return isGameOver
