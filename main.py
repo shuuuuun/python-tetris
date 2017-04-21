@@ -1,3 +1,8 @@
+import sys
 from tetris import Tetris
 
-Tetris()
+try:
+    Tetris()
+except KeyboardInterrupt:
+    print('KeyboardInterrupt')
+    sys.exit()

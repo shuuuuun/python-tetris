@@ -1,6 +1,9 @@
+import sys
 import time
 import copy
 import random
+import threading
+from threading import Timer
 import curses
 from curses import wrapper
 from constants import *
@@ -54,6 +57,9 @@ class Tetris:
         self.drawBorder(stdscr)
         self.drawBoard(stdscr)
         self.drawCurrentBlock(stdscr)
+        # stdscr.addstr(0, 0, 'hogehoge')
+        # self.isPlayng = False
+        # stdscr.addstr(0, 0, str(self.isPlayng))
         stdscr.refresh()
 
     def main(self, stdscr):
@@ -70,21 +76,36 @@ class Tetris:
         stdscr.refresh()
         # stdscr.getkey()
         # stdscr.getkey('w')
+        # stdscr.timeout()
+        # curses.echo()
+        # stdscr.addstr(0, 0, str(self))
+        # stdscr.refresh()
+        # self.quitGame()
         while True:
-            # c = stdscr.getch()
-            c = stdscr.getkey()
-            # print(c)
-            # if c == ord('q'):
-            if c == 'q':
-                self.isPlayng = False
+            # raise KeyboardInterrupt
+            # self.isPlayng = False
+            # self.quitGame()
+            # stdscr.addstr(0, 0, str(self.isPlayng))
+            # stdscr.refresh()
+            c = stdscr.getch()
+            if c == ord('q'):
+                # self.isPlayng = False
+                self.quitGame()
+                # stdscr.addstr(0, 0, 'hogehoge')
+                # stdscr.refresh()
+                # print(c)
+                # curses.echo()
+                # curses.nocbreak(); stdscr.keypad(0); curses.echo()
+                # curses.endwin()
+                # raise KeyboardInterrupt
                 break
-            elif c == 'KEY_LEFT':
+            elif c == curses.KEY_LEFT:
                 self.moveBlockLeft()
-            elif c == 'KEY_RIGHT':
+            elif c == curses.KEY_RIGHT:
                 self.moveBlockRight()
-            elif c == 'KEY_DOWN':
+            elif c == curses.KEY_DOWN:
                 self.moveBlockDown()
-            elif c == 'KEY_UP':
+            elif c == curses.KEY_UP:
                 self.rotateBlock()
 
     def newGame(self, stdscr):
@@ -125,13 +146,19 @@ class Tetris:
           self.createNextBlock()
         # self.tickId = setTimeout(() => self.tick(), self.tickInterval);
 
+        # self.quitGame()
+        # print(str(self.isPlayng))
         if self.isPlayng:
+            # self.isPlayng = False
             self.render(stdscr)
-            time.sleep(self.tickInterval / 1000)
-            self.tick(stdscr)
+            # time.sleep(self.tickInterval / 1000)
+            # self.tick(stdscr)
+            self.timer = Timer(self.tickInterval / 1000, self.tick, [stdscr])
+            self.timer.start()
 
     def quitGame(self):
         self.isPlayng = False
+        self.timer.cancel()
 
     # def pauseGame(self):
     #     # clearTimeout(self.tickId)
