@@ -4,17 +4,14 @@ import curses
 from curses import wrapper
 from constants import *
 
-BOARD_LINES = 12
-BOARD_COLS = 12
+BOARD_LINES = ROWS
+BOARD_COLS = COLS
 
 BASE_BLOCK_LINES = 2
 BASE_BLOCK_COLS = 3
 
-# print(NUMBER_OF_BLOCK)
-
 
 class Tetris:
-    # def __new__(cls):
     def __init__(self):
         wrapper(self.main)
 
@@ -29,8 +26,11 @@ class Tetris:
         box.box()
         box.refresh()
 
-    def drawBlock(self, win, boardX, boardY, id):
-        block = BLOCK_LIST[id]
+    # def drawBlock(self, win, boardX, boardY, id):
+    def drawBlock(self, win, block):
+        # block = BLOCK_LIST[id]
+        boardX = block['x']
+        boardY = block['y']
         for y in range(NUMBER_OF_BLOCK):
             for x in range(NUMBER_OF_BLOCK):
                 if not block['shape'][y][x]:
@@ -40,11 +40,12 @@ class Tetris:
                 self.drawBox(win, drawX, drawY)
 
     def drawCurrentBlock(self, win):
-        boardX = self.currentBlock['x']
-        boardY = self.currentBlock['y']
-        blockId = self.currentBlock['id']
-        self.drawBlock(win, boardX, boardY, blockId)
+        # boardX = self.currentBlock['x']
+        # boardY = self.currentBlock['y']
+        # blockId = self.currentBlock['id']
+        # self.drawBlock(win, boardX, boardY, blockId)
         # self.drawBlock(win, boardX, boardY, 1)
+        self.drawBlock(win, self.currentBlock)
         # if not (this.currentBlock.shape and this.currentBlock.shape.length):
         #   return
         # for y in range(NUMBER_OF_BLOCK):
@@ -165,11 +166,11 @@ class Tetris:
 
     def createBlock(self, id = 0):
         blockConst = BLOCK_LIST[id] or {}
-        shape = blockConst['shape']
+        # shape = blockConst['shape']
         block = copy.deepcopy(blockConst)
         block.update({
             'id': id,
-            'shape': [],
+            # 'shape': [],
             'x': 0,
             'y': 0,
         })
