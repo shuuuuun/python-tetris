@@ -1,8 +1,7 @@
 import copy
 import random
-from threading import Timer
 import curses
-from curses import wrapper
+from threading import Timer
 from constants import *
 
 BOARD_LINES = ROWS
@@ -14,7 +13,7 @@ BASE_BLOCK_COLS = 3
 
 class Tetris:
     def __init__(self):
-        wrapper(self.main)
+        curses.wrapper(self.main)
 
     def drawBorder(self, win):
         box = win.subwin(BOARD_LINES * BASE_BLOCK_LINES, BOARD_COLS * BASE_BLOCK_COLS, 0, 0)
