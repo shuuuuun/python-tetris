@@ -16,7 +16,7 @@ class Tetris:
     def __init__(self):
         wrapper(self.main)
 
-    def drawBoard(self, win):
+    def drawBorder(self, win):
         box = win.subwin(BOARD_LINES * BASE_BLOCK_LINES, BOARD_COLS * BASE_BLOCK_COLS, 0, 0)
         box.box()
         box.refresh()
@@ -27,39 +27,31 @@ class Tetris:
         box.box()
         box.refresh()
 
-    # def drawBlock(self, win, boardX, boardY, id):
+    def drawBoard(self, win):
+        for y in range(ROWS):
+            for x in range(COLS):
+                boardX = x
+                boardY = y + HIDDEN_ROWS
+                if not self.board[boardY][boardX]:
+                    continue
+                self.drawBox(win, x, y)
+
     def drawBlock(self, win, block):
-        # block = BLOCK_LIST[id]
-        boardX = block['x']
-        boardY = block['y']
         for y in range(NUMBER_OF_BLOCK):
             for x in range(NUMBER_OF_BLOCK):
                 if not block['shape'][y][x]:
                     continue
-                drawX = x + boardX
-                drawY = y + boardY
-                self.drawBox(win, drawX, drawY)
+                drawX = x + block['x']
+                drawY = y + block['y'] - HIDDEN_ROWS
+                if drawY >= 0:
+                    self.drawBox(win, drawX, drawY)
 
     def drawCurrentBlock(self, win):
-        # boardX = self.currentBlock['x']
-        # boardY = self.currentBlock['y']
-        # blockId = self.currentBlock['id']
-        # self.drawBlock(win, boardX, boardY, blockId)
-        # self.drawBlock(win, boardX, boardY, 1)
         self.drawBlock(win, self.currentBlock)
-        # if not (this.currentBlock['shape'] and this.currentBlock['shape'].length):
-        #   return
-        # for y in range(NUMBER_OF_BLOCK):
-        #   for x in range(NUMBER_OF_BLOCK):
-        #     blockId = self.currentBlock['id']
-        #     if (!self.currentBlock['shape'][y][x] || isNaN(blockId) || blockId < 0):
-        #         continue
-        #     drawX = x + self.currentBlock['x']
-        #     drawY = y + self.currentBlock['y'] - HIDDEN_ROWS
-        #     self.drawBlock(drawX, drawY, blockId)
 
     def render(self, stdscr):
         stdscr.clear()
+        self.drawBorder(stdscr)
         self.drawBoard(stdscr)
         self.drawCurrentBlock(stdscr)
         stdscr.refresh()
@@ -67,7 +59,7 @@ class Tetris:
     def main(self, stdscr):
         stdscr.clear()
 
-        self.drawBoard(stdscr)
+        # self.drawBorder(stdscr)
         # self.drawBox(stdscr, 0, 0)
         
         # self.drawBlock(stdscr, 3, 0, 0)
