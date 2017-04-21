@@ -1,13 +1,8 @@
-# import sys, time
 import time
 import copy
 import curses
 from curses import wrapper
-# import constants
-# import constants.index
-# from constants import *
-from constants.index import *
-# from constants.shapeList import SHAPE_LIST
+from constants import *
 
 BOARD_LINES = 12
 BOARD_COLS = 12
