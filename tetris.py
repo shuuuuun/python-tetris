@@ -219,8 +219,8 @@ class Tetris:
         return isValid
 
     def rotateBlock(self):
-        rotatedBlock = Object.assign({}, self.currentBlock)
-        rotatedBlock.shape = self.rotate(self.currentBlock['shape'])
+        rotatedBlock = copy.deepcopy(self.currentBlock)
+        rotatedBlock['shape'] = self.rotate(self.currentBlock['shape'])
         isValid = self.validate(0, 0, rotatedBlock)
         if isValid:
             self.currentBlock = rotatedBlock
@@ -230,9 +230,9 @@ class Tetris:
         shape = shape or self.currentBlock['shape']
         newBlockShape = []
         for y in range(NUMBER_OF_BLOCK):
-            newBlockShape[y] = []
+            newBlockShape.append([])
             for x in range(NUMBER_OF_BLOCK):
-                newBlockShape[y][x] = shape[NUMBER_OF_BLOCK - 1 - x][y]
+                newBlockShape[y].append(shape[NUMBER_OF_BLOCK - 1 - x][y])
         return newBlockShape;
 
     def rotateBoard(self, sign):
