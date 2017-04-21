@@ -30,9 +30,7 @@ class Tetris:
         box.refresh()
 
     def drawBlock(self, win, boardX, boardY, id):
-        # shape = SHAPE_LIST[id]
         block = BLOCK_LIST[id]
-        # blockId = block['id'];
         for y in range(NUMBER_OF_BLOCK):
             for x in range(NUMBER_OF_BLOCK):
                 if not block['shape'][y][x]:
@@ -44,11 +42,9 @@ class Tetris:
     def drawCurrentBlock(self, win):
         boardX = self.currentBlock['x']
         boardY = self.currentBlock['y']
-        # print(boardX, boardY)
-        # blockId = self.currentBlock['id']
-        # print(blockId)
-        # self.drawBlock(win, boardX, boardY, blockId)
-        self.drawBlock(win, boardX, boardY, 0)
+        blockId = self.currentBlock['id']
+        self.drawBlock(win, boardX, boardY, blockId)
+        # self.drawBlock(win, boardX, boardY, 1)
         # if not (this.currentBlock.shape and this.currentBlock.shape.length):
         #   return
         # for y in range(NUMBER_OF_BLOCK):
@@ -172,6 +168,7 @@ class Tetris:
         shape = blockConst['shape']
         block = copy.deepcopy(blockConst)
         block.update({
+            'id': id,
             'shape': [],
             'x': 0,
             'y': 0,
