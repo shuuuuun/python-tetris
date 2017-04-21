@@ -182,20 +182,19 @@ class Tetris:
         clearLineLength = 0 # 同時消去ライン数
         filledRowList = []
 
-        # for ( y = LOGICAL_ROWS - 1; y >= 0; --y ) {
-        #   isRowFilled = self.board[y].every((val) => val !== 0)
-        #   if not isRowFilled:
-        #       continue
-        #   filledRowList.push(y)
-        #   clearLineLength++
-        #   self.sumOfClearLines++
-        #   self.tickInterval -= SPEEDUP_RATE # 1行消去で速度を上げる
+        for y in reversed(range(LOGICAL_ROWS)):
+            isRowFilled = self.board[y].count(0) == 0
+            if not isRowFilled:
+                continue
+            filledRowList.append(y)
+            clearLineLength += 1
+            self.sumOfClearLines += 1
+            self.tickInterval -= SPEEDUP_RATE # 1行消去で速度を上げる
 
-        # if filledRowList.length:
-        #     filledRowList.reverse().forEach((row) => {
-        #       self.board.splice(row, 1)
-        #       self.board.unshift(BLANK_ROW)
-        #     })
+        if len(filledRowList) > 0:
+            for row in reversed(filledRowList):
+                del self.board[row]
+                self.board.insert(0, BLANK_ROW)
 
         # calc score
         # self.score += (clearLineLength <= 1) ? clearLineLength : Math.pow(2, clearLineLength)
