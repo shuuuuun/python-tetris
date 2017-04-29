@@ -205,17 +205,6 @@ class Tetris:
             self.currentBlock = rotatedBlock
         return isValid
 
-    def rotateBoard(self, sign):
-        newBoard = []
-        for y in range(ROWS):
-            newBoard[y] = []
-            for x in range(COLS):
-                newBoard[y][x] = self.board[COLS - 1 - x + HIDDEN_ROWS][y]
-        for i in range(HIDDEN_ROWS):
-            newBoard.unshift(BLANK_ROW)
-        self.board = newBoard
-        return newBoard
-
     def validate(self, offsetX = 0, offsetY = 0, block = None):
         block = block or self.currentBlock
         nextX = block.x + offsetX
