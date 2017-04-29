@@ -3,6 +3,7 @@ import random
 import curses
 from threading import Timer
 from constants import *
+from block import Block
 
 BOARD_LINES = ROWS
 BOARD_COLS = COLS
@@ -38,10 +39,10 @@ class Tetris:
     def drawBlock(self, win, block):
         for y in range(NUMBER_OF_BLOCK):
             for x in range(NUMBER_OF_BLOCK):
-                if not block['shape'][y][x]:
+                if not block.shape[y][x]:
                     continue
-                drawX = x + block['x']
-                drawY = y + block['y'] - HIDDEN_ROWS
+                drawX = x + block.x
+                drawY = y + block.y - HIDDEN_ROWS
                 if drawY >= 0:
                     self.drawBox(win, drawX, drawY)
 
@@ -133,48 +134,29 @@ class Tetris:
         for y in range(LOGICAL_ROWS):
             self.board.insert(y, [])
             for x in range(COLS):
-                # self.board[y][x] = 0
                 self.board[y].insert(x, 0)
 
     def initBlock(self):
         self.createNextBlock()
         self.createCurrentBlock()
 
-    def createBlock(self, id = 0):
-        blockConst = BLOCK_LIST[id] or {}
-        # shape = blockConst['shape']
-        block = copy.deepcopy(blockConst)
-        block.update({
-            'id': id,
-            # 'shape': [],
-            'x': 0,
-            'y': 0,
-        })
-        # for y in range(NUMBER_OF_BLOCK):
-        #     block['shape'].insert(y, [])
-        #     for x in range(NUMBER_OF_BLOCK):
-        #         block['shape'][y][x] = shape[y][x] or 0
-        return block
-
     def createCurrentBlock(self):
         if not self.nextBlock:
             self.createNextBlock()
         self.currentBlock = self.nextBlock
-        self.currentBlock['x'] = START_X
-        self.currentBlock['y'] = START_Y
 
     def createNextBlock(self):
         id = random.randint(0, len(BLOCK_LIST) - 1)
-        self.nextBlock = self.createBlock(id)
+        self.nextBlock = Block(id, START_X, START_Y)
 
     def freeze(self):
         for y in range(NUMBER_OF_BLOCK):
             for x in range(NUMBER_OF_BLOCK):
-                boardX = x + self.currentBlock['x']
-                boardY = y + self.currentBlock['y']
-                if not self.currentBlock['shape'][y][x] or boardY < 0:
+                boardX = x + self.currentBlock.x
+                boardY = y + self.currentBlock.y
+                if not self.currentBlock.shape[y][x] or boardY < 0:
                     continue
-                self.board[boardY][boardX] = self.currentBlock['id'] + 1 if self.currentBlock['shape'][y][x] else 0
+                self.board[boardY][boardX] = self.currentBlock.block_id + 1 if self.currentBlock.shape[y][x] else 0
 
     def clearLines(self):
         clearLineLength = 0 # 同時消去ライン数
@@ -200,37 +182,28 @@ class Tetris:
     def moveBlockLeft(self):
         isValid = self.validate(-1, 0)
         if isValid:
-            self.currentBlock['x'] -= 1
+            self.currentBlock.moveLeft()
         return isValid
 
     def moveBlockRight(self):
         isValid = self.validate(1, 0)
         if isValid:
-            self.currentBlock['x'] += 1
+            self.currentBlock.moveRight()
         return isValid
 
     def moveBlockDown(self):
         isValid = self.validate(0, 1)
         if isValid:
-            self.currentBlock['y'] += 1
+            self.currentBlock.moveDown()
         return isValid
 
     def rotateBlock(self):
         rotatedBlock = copy.deepcopy(self.currentBlock)
-        rotatedBlock['shape'] = self.rotate(self.currentBlock['shape'])
+        rotatedBlock.rotate()
         isValid = self.validate(0, 0, rotatedBlock)
         if isValid:
             self.currentBlock = rotatedBlock
         return isValid
-
-    def rotate(self, shape):
-        shape = shape or self.currentBlock['shape']
-        newBlockShape = []
-        for y in range(NUMBER_OF_BLOCK):
-            newBlockShape.append([])
-            for x in range(NUMBER_OF_BLOCK):
-                newBlockShape[y].append(shape[NUMBER_OF_BLOCK - 1 - x][y])
-        return newBlockShape;
 
     def rotateBoard(self, sign):
         newBoard = []
@@ -245,12 +218,12 @@ class Tetris:
 
     def validate(self, offsetX = 0, offsetY = 0, block = None):
         block = block or self.currentBlock
-        nextX = block['x'] + offsetX
-        nextY = block['y'] + offsetY
+        nextX = block.x + offsetX
+        nextY = block.y + offsetY
 
         for y in range(NUMBER_OF_BLOCK):
             for x in range(NUMBER_OF_BLOCK):
-                if not (block['shape'] and block['shape'][y][x]):
+                if not (block.shape and block.shape[y][x]):
                     continue
                 boardX = x + nextX
                 boardY = y + nextY
@@ -268,8 +241,8 @@ class Tetris:
         isGameOver = True
         for y in range(NUMBER_OF_BLOCK):
             for x in range(NUMBER_OF_BLOCK):
-                boardX = x + self.currentBlock['x']
-                boardY = y + self.currentBlock['y']
+                boardX = x + self.currentBlock.x
+                boardY = y + self.currentBlock.y
                 if boardY >= HIDDEN_ROWS:
                     isGameOver = False
                     break
