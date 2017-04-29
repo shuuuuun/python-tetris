@@ -137,10 +137,8 @@ class Tetris:
                 self.board[y].insert(x, 0)
 
     def initBlock(self):
-        self.nextBlock = self.createBlock(0)
-        self.currentBlock = self.createBlock(0)
-        self.currentBlock['x'] = START_X
-        self.currentBlock['y'] = START_Y
+        self.createNextBlock()
+        self.createCurrentBlock()
 
     def createBlock(self, id = 0):
         blockConst = BLOCK_LIST[id] or {}
